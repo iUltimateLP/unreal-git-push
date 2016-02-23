@@ -32,6 +32,9 @@ public:
 	/** Remote Entry was clicked -> PUSH **/
 	void RemoteEntryClicked(FString branch, FString host);
 
+	/** Reload plugin **/
+	void ReInitPlugin();
+
 private:
 
 	void AddToolbarExtension(FToolBarBuilder& Builder);

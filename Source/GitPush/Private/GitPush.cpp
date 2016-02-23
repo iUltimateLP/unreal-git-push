@@ -10,6 +10,8 @@
 
 #include "LevelEditor.h"
 
+#include "IProjectManager.h"
+
 #include <string>
 #include <iostream>
 #include <cstdio>
