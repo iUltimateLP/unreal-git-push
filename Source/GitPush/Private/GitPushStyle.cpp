@@ -49,6 +49,7 @@ TSharedRef< FSlateStyleSet > FGitPushStyle::Create()
 	Style->Set("GitPush.MasterBranch", new IMAGE_BRUSH(TEXT("MasterBranchIcon_40x"), Icon40x40));
 	Style->Set("GitPush.OtherBranch", new IMAGE_BRUSH(TEXT("OtherBranchIcon_40x"), Icon40x40));
 	Style->Set("GitPush.ErrorIcon", new IMAGE_BRUSH(TEXT("ErrorIcon_40x"), Icon40x40));
+	Style->Set("GitPush.PluginActionError", new IMAGE_BRUSH(TEXT("GitPushIconError_40x"), Icon40x40));
 
 	return Style;
 }

@@ -65,17 +65,31 @@ void FGitPushModule::PopulateRemoteEntries(FMenuBuilder& MenuBuilder, FString br
 {	
 	MenuBuilder.BeginSection("GitPushRemote", LOCTEXT("GitPushSelectRemoteTitle", "Select remote host"));
 
-	for (int32 i = 0; i < remoteHosts.Num(); i++)
+	if (remoteHosts.Num() != 0)
+	{
+		for (int32 i = 0; i < remoteHosts.Num(); i++)
+		{
+			MenuBuilder.AddMenuEntry(
+				FText::Format(LOCTEXT("GitPushRemoteLabel", "Host: {0}"), FText::FromString(remoteHosts[i])),
+				FText::Format(LOCTEXT("GitPushRemoteTooltip", "Push the commit from branch {0} to remote host {1}"), FText::FromString(branch), FText::FromString(remoteHosts[i])),
+				FSlateIcon(),
+				FUIAction(FExecuteAction::CreateRaw(this, &FGitPushModule::RemoteEntryClicked, branch, remoteHosts[i])),
+				NAME_None,
+				EUserInterfaceActionType::Button,
+				NAME_None
+				);
+		}
+	}
+	else
 	{
 		MenuBuilder.AddMenuEntry(
-			FText::Format(LOCTEXT("GitPushRemoteLabel", "Host: {0}"), FText::FromString(remoteHosts[i])),
-			FText::Format(LOCTEXT("GitPushRemoteTooltip", "Push the commit from branch {0} to remote host {1}"), FText::FromString(branch), FText::FromString(remoteHosts[i])),
-			FSlateIcon(),
-			FUIAction(FExecuteAction::CreateRaw(this, &FGitPushModule::RemoteEntryClicked, branch, remoteHosts[i])),
+			LOCTEXT("GitPushRemoteError", "Error: No remote host in git repo found!"),
+			LOCTEXT("GitPushRemoteError", "Error: No remote host in git repo found!"),
+			FSlateIcon("GitPushStyle", "GitPush.ErrorIcon"),
+			FUIAction(),
 			NAME_None,
 			EUserInterfaceActionType::Button,
-			NAME_None
-			);
+			NAME_None);
 	}
 
 	MenuBuilder.EndSection();
@@ -136,7 +150,8 @@ TSharedRef<SWidget> FGitPushModule::ToolbarContent()
 
 void FGitPushModule::AddToolbarExtension(FToolBarBuilder& Builder)
 {
-	FSlateIcon icon = FSlateIcon("GitPushStyle", "GitPush.PluginAction");
+	FSlateIcon icon = (branches.Num() == 0 || !FGitHelper::IsGitRepo(FPaths::GetPath(FPaths::GetProjectFilePath()))) ? FSlateIcon("GitPushStyle", "GitPush.PluginActionError") : FSlateIcon("GitPushStyle", "GitPush.PluginAction");
+
 	Builder.AddComboButton(FUIAction(), FOnGetContent::CreateRaw(this, &FGitPushModule::ToolbarContent), LOCTEXT("GitPushButton", "GitPush"), LOCTEXT("GitPushButtonToolip", "Opens GitPush"), icon);
 }
 
