@@ -88,7 +88,7 @@ void FGitPushModule::RemoteEntryClicked(FString branch, FString host)
 	UE_LOG(LogWindows, Log, TEXT("Pushing latest commit from %s to %s"), *branch, *host);
 	GitPushReturn result = FGitHelper::PushCommit(host, branch);
 
-	FMessageDialog::Open(EAppMsgType::Ok, FText::Format(LOCTEXT("GitPushPushedMessage", "{0}.\n\nGit Output:\n{1}"),
+	FMessageDialog::Open(EAppMsgType::Ok, FText::Format(LOCTEXT("GitPushPushedMessage", "{0}\n\nGit Output:\n{1}"),
 		(result.bSuccessful ? LOCTEXT("GitPushPushSuccess", "The commit was succesfully pushed!") : LOCTEXT("GitPushPushFail", "The commit could not be pushed :(")),
 		FText::FromString(result.consoleReturn)));
 }
