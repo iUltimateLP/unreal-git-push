@@ -17,6 +17,8 @@ public:
 	static TArray<FString> GetBranches();
 	/** Get all remote hosts of the current repo **/
 	static TArray<FString> GetRemoteHosts();
+	/** Check if a folder is a git repo **/
+	static bool IsGitRepo(FString path);
 	/** Push Git Commit to repo **/
 	static GitPushReturn PushCommit(FString remoteHostName, FString destinationBranch);
 };

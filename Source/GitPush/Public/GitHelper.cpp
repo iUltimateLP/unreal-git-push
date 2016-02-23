@@ -69,6 +69,13 @@ TArray<FString> FGitHelper::GetRemoteHosts()
 	return outArray;
 }
 
+bool FGitHelper::IsGitRepo(FString path)
+{
+	FString gitPath = FPaths::Combine(*path, TEXT(".git"));
+
+	return FPaths::DirectoryExists(gitPath);
+}
+
 GitPushReturn FGitHelper::PushCommit(FString remoteHostName, FString destinationBranch)
 {
 	// git push source:dest --porcelain
