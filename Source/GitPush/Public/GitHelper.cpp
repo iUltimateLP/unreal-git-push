@@ -32,10 +32,9 @@ FString FGitHelper::ExecuteWindowsCommand(FString command)
 	return res;
 }
 
-TArray<GitBranch> FGitHelper::GetBranches()
+TArray<FString> FGitHelper::GetBranches()
 {
-	TArray<GitBranch> outArray;
-	TArray<FString> buffer;
+	TArray<FString> outArray;
 
 	FString workingDir = FPaths::GetPath(FPaths::GetProjectFilePath());
 	FString workingDrive = FString().AppendChar(workingDir.GetCharArray()[0]);
@@ -49,27 +48,17 @@ TArray<GitBranch> FGitHelper::GetBranches()
 
 		if (!result.IsEmpty())
 		{
-			result.ParseIntoArrayLines(buffer, true);
-			for (int32 i = 0; i < buffer.Num(); i++)
+			result.ParseIntoArrayLines(outArray, true);
+			for (int32 i = 0; i < outArray.Num(); i++)
 			{
-				buffer[i].RemoveAt(0, 2);
-				outArray.Add(GitBranch(true, buffer[i]));
+				outArray[i].RemoveAt(0, 2);
 			}
 
 			UE_LOG(LogWindows, Log, TEXT("GitPush: Got %d branches."), outArray.Num());
 		}
-		else
-		{
-			outArray.Add(GitBranch(false, "No branches in repo!"));
-		}
+	}
 
-		return outArray;
-	}
-	else
-	{
-		outArray.Add(GitBranch(false, "No git repo!"));
-		return outArray;
-	}
+	return outArray;
 }
 
 TArray<FString> FGitHelper::GetRemoteHosts()

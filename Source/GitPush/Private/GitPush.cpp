@@ -15,8 +15,6 @@
 #include <cstdio>
 #include <memory>
 
-#include "GitHelper.h"
-
 static const FName GitPushTabName("GitPush");
 
 #define LOCTEXT_NAMESPACE "FGitPushModule"
@@ -102,30 +100,30 @@ TSharedRef<SWidget> FGitPushModule::ToolbarContent()
 
 	MenuBuilder.BeginSection("GitPush", LOCTEXT("GitPushBranches", "Select Branch"));
 
-	for (int32 i = 0; i < branches.Num(); i++)
+	if (branches.Num() != 0)
 	{
-		if (branches[i].bIsValid)
+		for (int32 i = 0; i < branches.Num(); i++)
 		{
 			FSlateIcon icon = (i == branches.Num() - 1) ? FSlateIcon("GitPushStyle", "GitPush.MasterBranch") : FSlateIcon("GitPushStyle", "GitPush.OtherBranch");
 
 			MenuBuilder.AddSubMenu(
-				FText::Format(LOCTEXT("GitPushBranchesLabel", "Branch: {0}"), FText::FromString(branches[i].branchName)),
-				FText::Format(LOCTEXT("GitPushBranchesTooltip", "Push the commit to {0}"), FText::FromString(branches[i].branchName)),
-				FNewMenuDelegate::CreateRaw(this, &FGitPushModule::PopulateRemoteEntries, branches[i].branchName),
+				FText::Format(LOCTEXT("GitPushBranchesLabel", "Branch: {0}"), FText::FromString(branches[i])),
+				FText::Format(LOCTEXT("GitPushBranchesTooltip", "Push the commit to {0}"), FText::FromString(branches[i])),
+				FNewMenuDelegate::CreateRaw(this, &FGitPushModule::PopulateRemoteEntries, branches[i]),
 				false,
 				icon);
 		}
-		else
-		{
-			MenuBuilder.AddMenuEntry(
-				FText::Format(LOCTEXT("GitPushBranchesError", "Error: {0}"), FText::FromString(branches[i].branchName)),
-				FText::Format(LOCTEXT("GitPushBranchesError", "Error: {0}"), FText::FromString(branches[i].branchName)),
-				FSlateIcon("GitPushStyle", "GitPush.ErrorIcon"),
-				FUIAction(),
-				NAME_None,
-				EUserInterfaceActionType::Button,
-				NAME_None);
-		}
+	}
+	else
+	{
+		MenuBuilder.AddMenuEntry(
+			LOCTEXT("GitPushBranchesError", "Error: No branches or no git repo found!"),
+			LOCTEXT("GitPushBranchesError", "Error: No branches or no git repo found!"),
+			FSlateIcon("GitPushStyle", "GitPush.ErrorIcon"),
+			FUIAction(),
+			NAME_None,
+			EUserInterfaceActionType::Button,
+			NAME_None);
 	}
 
 	FSlateIcon icon = FSlateIcon("GitPushStyle", "GitPush.MasterBranch");

@@ -4,6 +4,8 @@
 
 #include "ModuleManager.h"
 
+#include "GitHelper.h"
+
 class FToolBarBuilder;
 class FMenuBuilder;
 
@@ -19,7 +21,7 @@ public:
 	TSharedRef<SWidget> ToolbarContent();
 
 	/** All branches - collected at begin of editor startup **/
-	TArray<GitBranch> branches;
+	TArray<FString> branches;
 
 	/** All remote hosts - also collected at begin of editor startup **/
 	TArray<FString> remoteHosts;
