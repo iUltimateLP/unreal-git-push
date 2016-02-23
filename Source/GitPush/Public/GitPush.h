@@ -14,15 +14,12 @@ public:
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override;
 	virtual void ShutdownModule() override;
-	
-	/** This function will be bound to an Branch entry. */
-	void BranchEntryClicked(FString branch);
 
 	/** Function to generate all the Content of the Toolbar dropdown **/
 	TSharedRef<SWidget> ToolbarContent();
 
 	/** All branches - collected at begin of editor startup **/
-	TArray<FString> branches;
+	TArray<GitBranch> branches;
 
 	/** All remote hosts - also collected at begin of editor startup **/
 	TArray<FString> remoteHosts;

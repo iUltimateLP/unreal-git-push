@@ -8,13 +8,25 @@ struct GitPushReturn
 	FString consoleReturn;
 };
 
+struct GitBranch
+{
+	bool bIsValid;
+	FString branchName;
+
+	GitBranch(bool isValid, FString name)
+	{
+		bIsValid = isValid;
+		branchName = name;
+	}
+};
+
 class FGitHelper
 {
 public:
 	/** Execute Windows Shell command **/
 	static FString ExecuteWindowsCommand(FString command);
 	/** Get all branches of the current repo **/
-	static TArray<FString> GetBranches();
+	static TArray<GitBranch> GetBranches();
 	/** Get all remote hosts of the current repo **/
 	static TArray<FString> GetRemoteHosts();
 	/** Check if a folder is a git repo **/

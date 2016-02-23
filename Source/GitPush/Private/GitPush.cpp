@@ -104,24 +104,28 @@ TSharedRef<SWidget> FGitPushModule::ToolbarContent()
 
 	for (int32 i = 0; i < branches.Num(); i++)
 	{
-		FSlateIcon icon = (i == branches.Num()-1) ? FSlateIcon("GitPushStyle", "GitPush.MasterBranch") : FSlateIcon("GitPushStyle", "GitPush.OtherBranch");
-		const FString branch = branches[i];
+		if (branches[i].bIsValid)
+		{
+			FSlateIcon icon = (i == branches.Num() - 1) ? FSlateIcon("GitPushStyle", "GitPush.MasterBranch") : FSlateIcon("GitPushStyle", "GitPush.OtherBranch");
 
-		/*MenuBuilder.AddMenuEntry(
-			FText::Format(LOCTEXT("GitPushBranchesLabel", "Branch: {0}"), FText::FromString(branches[i])),
-			FText::Format(LOCTEXT("GitPushComboBranchTooltip", "Push the commit to {0}"), FText::FromString(branches[i])),
-			icon,
-			FUIAction(FExecuteAction::CreateRaw(this, &FGitPushModule::BranchEntryClicked, branch)),
-			NAME_None,
-			EUserInterfaceActionType::Button,
-			NAME_None);*/
-
-		MenuBuilder.AddSubMenu(
-			FText::Format(LOCTEXT("GitPushBranchesLabel", "Branch: {0}"), FText::FromString(branches[i])),
-			FText::Format(LOCTEXT("GitPushBranchesTooltip", "Push the commit to {0}"), FText::FromString(branches[i])),
-			FNewMenuDelegate::CreateRaw(this, &FGitPushModule::PopulateRemoteEntries, branch), 
-			false, 
-			icon);
+			MenuBuilder.AddSubMenu(
+				FText::Format(LOCTEXT("GitPushBranchesLabel", "Branch: {0}"), FText::FromString(branches[i].branchName)),
+				FText::Format(LOCTEXT("GitPushBranchesTooltip", "Push the commit to {0}"), FText::FromString(branches[i].branchName)),
+				FNewMenuDelegate::CreateRaw(this, &FGitPushModule::PopulateRemoteEntries, branches[i].branchName),
+				false,
+				icon);
+		}
+		else
+		{
+			MenuBuilder.AddMenuEntry(
+				FText::Format(LOCTEXT("GitPushBranchesError", "Error: {0}"), FText::FromString(branches[i].branchName)),
+				FText::Format(LOCTEXT("GitPushBranchesError", "Error: {0}"), FText::FromString(branches[i].branchName)),
+				FSlateIcon("GitPushStyle", "GitPush.ErrorIcon"),
+				FUIAction(),
+				NAME_None,
+				EUserInterfaceActionType::Button,
+				NAME_None);
+		}
 	}
 
 	FSlateIcon icon = FSlateIcon("GitPushStyle", "GitPush.MasterBranch");
@@ -130,15 +134,6 @@ TSharedRef<SWidget> FGitPushModule::ToolbarContent()
 	MenuBuilder.EndSection();
 
 	return MenuBuilder.MakeWidget();
-}
-
-void FGitPushModule::BranchEntryClicked(FString branch)
-{
-	GitPushReturn result = FGitHelper::PushCommit(currentRemoteHost, branch);
-
-	FMessageDialog::Open(EAppMsgType::Ok,
-		FText::FromString(
-			FString::Printf(TEXT("bSuccessful: %s\nreturnContent: %s"), result.bSuccessful ? TEXT("true") : TEXT("false"), *result.consoleReturn)));
 }
 
 void FGitPushModule::AddToolbarExtension(FToolBarBuilder& Builder)
