@@ -38,7 +38,7 @@ TArray<FString> FGitHelper::GetBranches()
 	FString workingDrive = FString().AppendChar(workingDir.GetCharArray()[0]);
 
 	//FString command = FString::Printf(TEXT("cd \"%s\" && git branch --list 2>&1"), *workingDir, *tempPath);
-	FString command = FString::Printf(TEXT("%s: && cd \"%s%\" && git branch --list 2>&1"), *workingDrive, *workingDir);
+	FString command = FString::Printf(TEXT("%s: && cd \"%s\" && git branch --list 2>&1"), *workingDrive, *workingDir);
 	FString result = ExecuteWindowsCommand(command);
 
 	TArray<FString> outArray;
@@ -58,7 +58,7 @@ TArray<FString> FGitHelper::GetRemoteHosts()
 	FString workingDir = FPaths::GetPath(FPaths::GetProjectFilePath());
 	FString workingDrive = FString().AppendChar(workingDir.GetCharArray()[0]);
 
-	FString command = FString::Printf(TEXT("%s: && cd \"%s%\" && git remote 2>&1"), *workingDrive, *workingDir);
+	FString command = FString::Printf(TEXT("%s: && cd \"%s\" && git remote 2>&1"), *workingDrive, *workingDir);
 	FString result = ExecuteWindowsCommand(command);
 
 	TArray<FString> outArray;
@@ -75,7 +75,7 @@ GitPushReturn FGitHelper::PushCommit(FString remoteHostName, FString destination
 	FString workingDir = FPaths::GetPath(FPaths::GetProjectFilePath());
 	FString workingDrive = FString().AppendChar(workingDir.GetCharArray()[0]);
 
-	FString command = FString::Printf(TEXT("%s: && cd \"%s%\" && git push %s master:%s --porcelain 2>&1"), *workingDrive, *workingDir, *remoteHostName, *destinationBranch);
+	FString command = FString::Printf(TEXT("%s: && cd \"%s\" && git push %s master:%s --porcelain 2>&1"), *workingDrive, *workingDir, *remoteHostName, *destinationBranch);
 	FString result = FGitHelper::ExecuteWindowsCommand(command);
 
 	GitPushReturn output;
